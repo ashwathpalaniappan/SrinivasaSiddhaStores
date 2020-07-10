@@ -1,0 +1,213 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap');
+
+*{
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+table {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 80%;
+  color: black;
+}
+.buy:focus { outline-style: none; }
+td, th {
+  border: 1.5px solid #333;
+  padding: 8px;
+}
+
+th {
+  padding-top: 12px;
+  padding-left: 8px;
+  padding-bottom: 12px;
+  text-align: left;
+  color: black;
+  background: #fff;
+}
+.plus{
+background-color: #fff; border: none; color: black; padding: 2px 8px; font-weight: 500;
+}
+.minus{
+background-color: #fff; border: none; color: black; padding: 2px 8px; font-weight: 500;
+}
+.del{
+background-color: #DC143C; border: none; color: white; padding: 2px 11px; border-radius: 50%; font-size: 17px;
+}
+.buy{
+background-color: #4CAF50;
+border: none;
+color: white;
+padding: 2px 8px;
+border-radius: 25px;
+height: 40px;
+width: 130px;
+cursor: pointer;
+}
+.buy i{
+padding-right: 10px;
+}
+.tbox{
+border: 0px;
+text-align: center;
+}
+
+@media screen and (max-width: 800px){
+table{
+  margin-left: 30px;
+  margin-right: 0px;
+}
+.plus{
+padding: 2px 8px; font-size: 11px;
+}
+.minus{
+padding: 2px 8px; font-size: 11px;
+}
+.del{
+padding: 2px 8px; font-size: 12px;
+}
+.tbox{
+width: 40%;
+}
+}
+
+@media screen and (max-width: 360px){
+table{
+  margin-left: 30px;
+  margin-right: 0px;
+}
+.plus{
+padding: 2px 8px; font-size: 11px;
+}
+.minus{
+padding: 2px 8px; font-size: 11px;
+}
+.del{
+padding: 2px 8px; font-size: 12px;
+}
+.tbox{
+width: 40%;
+}
+.buy{
+  margin-left: 30px;
+}
+}
+
+.cart_icon{
+height: 10%;
+width: 10%;
+}
+nav{
+  position: fixed;
+  background: black;
+  padding: 22px 40px 22px 70px;
+  border: 1px solid #000;
+  border-left: none;
+  border-right: none;
+  width: 150vw;
+}
+nav ul{
+  display: flex;
+  list-style: none;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+nav ul li.logo{
+  flex: 1;
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+}
+nav ul div.items{
+  padding: 0 25px;
+  display: inline-flex;
+}
+.cart_icon{
+  padding: 0 15px;
+  display: flex;
+  font-size: 30px;
+  cursor: pointer;
+}
+.cart_icon p{
+  padding: 5px 5px;
+  font-size: 20px;
+  font-weight: 800;
+  color: #f2f2f2;
+}
+nav ul div.items a:hover{
+  color: cyan;
+}
+nav ul .search-icon{
+  height: 40px;
+  width: 60%;
+  display: flex;
+  background: #f2f2f2;
+  border-radius: 5px;
+}
+nav ul .search-icon input{
+  height: 100%;
+  width: 90%;
+  border: none;
+  outline: none;
+  padding: 0 10px;
+  color: #000;
+  font-size: 16px;
+  border-radius: 5px 0 0 5px;
+}
+nav ul .search-icon .icon{
+  height: 100%;
+  width: 10%;
+  line-height: 40px;
+  text-align: center;
+  border: 1px solid #cccccc;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+}
+nav ul .search-icon .icon:hover{
+  background: #e6e6e6;
+}
+nav ul .search-icon .icon span{
+  color: #222222;
+  font-size: 18px;
+}
+nav ul li.btn{
+  font-size: 29px;
+  flex: 1;
+  padding: 0 40px;
+  display: none;
+}
+nav ul li.btn span{
+  height: 42px;
+  width: 42px;
+  text-align: center;
+  line-height: 42px;
+  border: 1px solid #151515;
+  border-radius: 5px;
+  cursor: pointer;
+}
+nav ul li.btn span.show:before{
+  content: '\f00d';
+}
+@media screen and (max-width: 1052px) {
+  nav{
+    padding: 10px 5px 10px 10px;
+  }
+  nav ul div.items{
+    flex: 4;
+  }
+}
+@media screen and (max-width: 800px){
+  nav ul li.btn{
+    display: block;
+  }
+  nav{
+    z-index: 1;
+    padding: 22px 40px 25px 10px;
+  }
+
+}

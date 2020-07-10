@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="user.css">
+	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-analytics.js"></script>
+<script src="https://smtpjs.com/v3/smtp.js"></script>
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+</head>
+<body>
+<nav id="0">
+      <ul onclick="next2()">
+          &nbsp;&nbsp;<li class="logo"><i class='fa fa-arrow-left'></i>&nbsp;&nbsp;&nbsp;&nbsp;Srinivasa Siddha Stores</li>
+</ul>
+</nav>
+<br><br><br><br>
+    <div id ="1" class="container">
+		<div class="login-content">
+			<form><br>
+				<h1 class="title">Delivery Details</h1>
+				<br>
+           		<div class="input-div one">
+           		   		<input type="text" placeholder="Name" class="input2" id="namefield">
+           		</div>
+           		<div class="input-div pass">
+           		   <div class="div">
+                    <input type="number" placeholder="Phone Number" class="input2" id="phonefield">
+            	   </div>
+            	</div>
+                <div class="input-div pass">
+           		   <div class="div">
+                    <input type="email" placeholder="E-mail" class="input2" id="mailfield">
+            	   </div>
+            	</div>
+				<div class="input-div pass">
+           		   <div class="div">
+
+           		    	<input type="text" placeholder="Address Line 1" class="input2" id="addressfield1">
+            	   </div>
+            	</div>
+				<div class="input-div pass">
+           		   <div class="div">
+
+           		    	<input type="text" placeholder="Address Line 2" class="input2" id="addressfield2">
+            	   </div>
+            	</div>
+				<div class="input-div pass">
+           		   <div class="div">
+                        <input type="text" placeholder="Address Line 3" class="input2" id="addressfield3">
+            	   </div>
+            	</div>
+				<br>
+                <button type="button" class="buy" onclick="back()" style="background: white; color: black; font-weight: 500; border: 1px solid #333;" >Back to cart</button> &nbsp;
+                <button type="button" class="buy" onclick="writeData()" style="background: #333;">Proceed</button>
+				<p id="res2"></p>
+            </form>
+        </div>
+    </div>
+<div id="2" style="display:none;">
+	<center><br><img src="img/gift.png" class="responsive"> <h1 class="gift_text">Your Order has been placed!!</h1><p>Check your mail for invoice</p></center>
+</div>
+<script>
+function back()
+    {
+    location.href = "cart.html";
+    }
+    function next2()
+    {
+        location.href = "cart.html";
+    }
+
+     var firebaseConfig = {
+    apiKey: "AIzaSyDEsiPm8jfG2ickY2iIcQrj4ahtRBR77jI",
+    authDomain: "siddha-c5ac4.firebaseapp.com",
+    databaseURL: "https://siddha-c5ac4.firebaseio.com",
+    projectId: "siddha-c5ac4",
+    storageBucket: "siddha-c5ac4.appspot.com",
+    messagingSenderId: "984697769752",
+    appId: "1:984697769752:web:17f6d943e107d10e40186d",
+    measurementId: "G-58PDTGJNC1"
+  };
+
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+
+function writeData()
+    {
+var str_tot = sessionStorage.getItem("tot");
+  var options = {
+        "key": "rzp_live_FGrNiOjEJb38y1", // Enter the Key ID generated from the Dashboard
+        "amount": Number(str_tot)*100, // Amount is in currency subunits. Default currency is INR. Hence, 50000 means 50000 paise or ₹500.
+        "currency": "INR",
+        "name": "Srinivasa Siddha Stores",
+        "description": "Online Payment",
+        "handler": function (response){
+        saveDB();
+             } ,
+        "prefill": {
+            "name": document.getElementById("namefield").value,
+            "email": document.getElementById("mailfield").value,
+            "contact": document.getElementById("phonefield").value
+        },
+        "notes": {
+            "address": "note value"
+        },
+        "theme": {
+            "color": "#D41F22"
+        }
+    }
+    var propay = new Razorpay(options);
+    propay.open();
+}
+
+function saveDB()
+{
+    var name = document.getElementById("namefield").value;
+    var phn = document.getElementById("phonefield").value;
+    var adr1 = document.getElementById("addressfield1").value;
+    var adr2 = document.getElementById("addressfield2").value;
+    var adr3 = document.getElementById("addressfield3").value;
+	var str_tot = sessionStorage.getItem("tot");
+	var str_items = sessionStorage.getItem("itms");
+	str_items += "Deliver Charges - Rs.100 (May be refunded based on loation)" ;
+
+  firebase.database().ref('User -' + name + '-' + phn).set({
+    Name: name,
+    Phone: phn,
+    Address : { Line_1 : adr1,
+                Line_2 : adr2,
+                Line_3 : adr3  } ,
+    Items: str_items,
+    Total: str_tot
+  });
+
+    Email.send({
+    Host : "smtp.gmail.com",
+    Username : "thangamagenciesgsp@gmail.com",
+    Password : "sreemaan123",
+    To : "ashwathpalaniappan25@gmail.com",
+    From : "srinivasaayur@gmail.com",
+    Subject : "New Order!! From " + name + " !!",
+    Body : "Name:<br>" + name + "<br><br>Phone:<br>" + phn + "<br><br>Address:<br>" + adr1 + ",<br>" + adr2 + ",<br>" + adr3 + ".<br><br>Items:<br>" + str_items + "<br>Total Amount: " + str_tot + ""
+    });
+
+    Email.send({
+    Host : "smtp.gmail.com",
+    Username : "thangamagenciesgsp@gmail.com",
+    Password : "sreemaan123",
+    To : document.getElementById("mailfield").value,
+    From : "srinivasaayur@gmail.com",
+    Subject : "Srinivasa Siddha Stores - Order Details",
+    Body : "<h3>Hi " + name +", Your order has been placed successfully!! </h3><b>Order Details:</b><br>" + str_items + "<br><b>Total Amount: " + str_tot + "</b>"
+    });
+document.getElementById("0").style = "display: none;"
+document.getElementById("1").style = "display: none;"
+document.getElementById("2").style = "display: block;"
+document.getElementById("namefield").value="";
+document.getElementById("phonefield").value="";
+document.getElementById("addressfield1").value="";
+document.getElementById("addressfield2").value="";
+document.getElementById("addressfield3").value="";
+sessionStorage.setItem("tot","");
+sessionStorage.setItem("itms","");
+var inames = [];
+var iqtyp=["1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1","1"];
+var iprice = [];
+sessionStorage.setItem("names", JSON.stringify(inames));
+sessionStorage.setItem("qtyp", JSON.stringify(iqtyp));
+sessionStorage.setItem("price", JSON.stringify(iprice));
+sessionStorage.setItem("cart_no",0);
+}
+
+</script>
+</body>
+</html>

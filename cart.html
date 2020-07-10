@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cart</title>
+<script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-database.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.14.4/firebase-analytics.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/pdfmake.min.js"></script>
+<script type="text/javascript" src="js/html2canvas.min.js"></script>
+<script src="https://smtpjs.com/v3/smtp.js"></script>
+<meta name="viewport" content="width=device-width">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+</head>
+<body>
+    <nav>
+      <ul>
+          &nbsp;&nbsp;<li class="logo" onclick="home()"><i class='fa fa-arrow-left'></i>&nbsp;&nbsp;&nbsp;&nbsp;Srinivasa Siddha Stores</li>
+</ul>
+</nav>
+<center>
+    <br><br><br><br><br>
+<h1 id="cart_items" class="head1" style="color: #A52A2A;">Cart Items</h1>
+    <br>
+<div id='cart'>
+</div>
+<link rel="stylesheet" href="si1.css">
+</center>
+<script>
+
+    var inames = JSON.parse(sessionStorage.getItem("names"));
+    var iprice = JSON.parse(sessionStorage.getItem("price"));
+    var iqtyp = JSON.parse(sessionStorage.getItem("qtyp"));
+    sessionStorage.setItem("bool2","true");
+
+    function home()
+    {
+    sessionStorage.setItem("bool3","true");
+    location.href = "index.html";
+    }
+
+    display_cart();
+
+  function display_cart()
+  {
+  var iqtyp = JSON.parse(sessionStorage.getItem("qtyp"));
+  cartdata = '<table><tr><th>Product Name</th><th>Quantity</th><th>Price</th><th>Total</th></tr>';
+  items = '';
+  total = 0;
+    for (i=0; i<inames.length; i++){
+  cartdata += "<tr><td>" + inames[i] + "</td><td>"+ "<button class='minus' onclick='decData(" + i + ")'>-</button><input type='text' size='1' class='tbox' id=" + i +" value = "+ iqtyp[i] +" readonly><button class='plus' onclick='incData(" + i + ")'>+</button>" +"</td><td>" + iprice[i] + "</td><td style='text-align: right; padding: 2px; padding-right: 8px;'>" + Number(iqtyp[i]) * Number(iprice[i]) + "</td><td style='border: 0px solid #ddd;'><button class='del' onclick='delElement(" + i + ")'><b>x</b></button></td></tr>";
+  total += Number(iqtyp[i]) * Number(iprice[i]);
+  items += inames[i] + "(" + iqtyp[i] + ") x Rs." + iprice[i] + " = Rs." + Number(iqtyp[i]) * Number(iprice[i]) + "<br>";
+  sessionStorage.setItem("itms", items);
+}
+  cartdata += "<tr><td style='border: 0px;  padding: 2px;'> </td> <td style='border: 0px solid #ddd; padding: 2px;'> </td> <td style='border: 0px solid #ddd;  text-align: right; padding: 2px;'> SubTotal: </td> <td style='border: 0px solid #ddd; text-align: right; padding: 2px; padding-right: 8px;'> " + total + "</td></tr>";
+  cartdata += "<tr><td style='border: 0px; padding: 2px;'> </td> <td style='border: 0px solid #ddd; padding: 2px;'> </td> <td style='border: 0px solid #ddd;  text-align: right; padding: 2px;'> Delivery Charges: </td> <td style='border: 0px solid #ddd; text-align: right; padding: 2px; padding-right: 8px;'> 100 </td></tr>";
+  var fin_total = Number(total) + Number(1);
+  sessionStorage.setItem("tot", fin_total);
+  cartdata += "<tr><td style='border: 0px; padding: 2px;'> </td> <td style='border: 0px solid #ddd; padding: 2px;'> </td> <td style='border: 0px solid #ddd;  text-align: right; padding: 2px;'> <b>Total: </b> </td> <td style='border: 0px solid #ddd; text-align: right; padding: 2px; padding-right: 8px;'> <b>" + fin_total + "</b></td></tr></table>";
+
+if(Number(total)==0)
+{ document.getElementById('cart').innerHTML = "No Items in Cart";}
+else
+ {
+ cartdata += "<br><button type='button' class='buy' style='background: #333; width: 20%;' onclick='front()'>Proceed to buy</button>";
+ document.getElementById('cart').innerHTML = cartdata;}
+ }
+function back()
+    {
+    location.href = "index.html";
+    }
+function front()
+    {
+    location.href = "user.html";
+    }
+function decData(x)
+  {
+      var y = document.getElementById(x).value;
+      var z = parseFloat(y) - 1;
+      if (z > 0)
+      {document.getElementById(x).value = z;}
+      setqty(x);
+  }
+
+  function incData(x)
+  {
+      var y = document.getElementById(x).value;
+      var z = parseFloat(y) + 1;
+      if (z > 0)
+      {document.getElementById(x).value = z;}
+      setqty(x);
+  }
+
+  function setqty(x)
+  {
+  var iqtyp = JSON.parse(sessionStorage.getItem("qtyp"));
+  iqtyp[x] = document.getElementById(x).value;
+  sessionStorage.setItem("qtyp", JSON.stringify(iqtyp));
+  display_cart();
+  }
+
+ function delElement(a){
+  var cart_no_1=sessionStorage.getItem("cart_no");
+  cart_no_1= Number(cart_no_1) - 1;
+  sessionStorage.setItem("cart_no",cart_no_1);
+  var iqtyp = JSON.parse(sessionStorage.getItem("qtyp"));
+
+  inames.splice(a, 1);
+  iprice.splice(a, 1);
+  iqtyp.splice(a,1);
+
+  sessionStorage.setItem("qtyp", JSON.stringify(iqtyp));
+  sessionStorage.setItem("names", JSON.stringify(inames));
+  sessionStorage.setItem("price",JSON.stringify(iprice));
+  display_cart();
+}
+
+</script>
+
+</body>
+</html>
